@@ -372,6 +372,7 @@ module Tapioca
         repo = create_repo({
           foo: <<~RBI,
             # typed: false
+
             # @version > 0.3.5
             class AnnotationForFoo; end
             class Foo; end
@@ -384,14 +385,17 @@ module Tapioca
 
         assert_project_annotation_equal("sorbet/rbi/annotations/foo.rbi", <<~RBI)
           # typed: false
+
           # DO NOT EDIT MANUALLY
           # This file was pulled from a central RBI files repository.
           # Please run `bin/tapioca annotations` to update it.
+
           class Foo; end
         RBI
 
         assert_success_status(result)
 
+        @project.write_gemfile!(@project.tapioca_gemfile)
         repo.destroy!
       end
     end
